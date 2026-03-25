@@ -20,21 +20,21 @@ envx-core = { path = "crates/core", version = "=0.6.2" }
 envx-cli = { path = "crates/cli", version = "=0.6.2" }
 envx-tui = { path = "crates/tui", version = "=0.6.2" }
 # Common dependencies
-thiserror = "2.0.16"
+thiserror = "2.0.18"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 chrono = { version = "0.4", features = ["serde"] }
-clap = { version = "4.5.47", features = ["derive", "env"] }
-indexmap = "2.11.0"
-uuid = { version = "1.18.1", features = ["v4", "serde"] }
+clap = { version = "4.6.0", features = ["derive", "env"] }
+indexmap = "2.13.0"
+uuid = { version = "1.22.0", features = ["v4", "serde"] }
 color-eyre = "0.6.5"
-regex = "1.11"
-tempfile = "3.21.0"
+regex = "1.12"
+tempfile = "3.27.0"
 dirs = "6.0.0"
-serde_yaml = "0.9.33"
-ctrlc = "3.4.7"
+serde_yaml = "0.9.34"
+ctrlc = "3.5.2"
 notify = "8.2.0"
 notify-debouncer-mini = "0.7.0"
 walkdir = "2.5.0"
@@ -45,11 +45,11 @@ ahash = { version = "0.8", features = ["serde"] }
 ratatui = "0.29.0"
 crossterm = "0.29.0"
 tui-textarea = "0.7.0"
-comfy-table = "7.2.0"
-console = "0.16.0"
+comfy-table = "7.2.2"
+console = "0.16.3"
 tui-input = "0.14.0"
 dialoguer = "0.12.0"
-colored = "3.0.0"
+colored = "3.1.1"
 
 # Platform-specific dependencies (to be used in individual crates)
 winreg = "0.55.0"

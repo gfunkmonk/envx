@@ -24,7 +24,7 @@ ratatui = { workspace = true }
 crossterm = { workspace = true }
 
 [target.'cfg(windows)'.dependencies]
-mimalloc = "0.1.47"
+mimalloc = "0.1.48"
 
 [target.'cfg(not(windows))'.dependencies]
 jemallocator = "0.5.4"
