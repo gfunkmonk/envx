@@ -50,6 +50,14 @@ jobs:
             target: armv7-unknown-linux-musleabihf
             artifact_name: envx
             asset_name: envx-linux-armv7-static
+          - os: ubuntu-latest
+            target: armv6-unknown-linux-gnueabihf
+            artifact_name: envx
+            asset_name: envx-linux-armv6
+          - os: ubuntu-latest
+            target: armv6-unknown-linux-musleabihf
+            artifact_name: envx
+            asset_name: envx-linux-armv6-static
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -71,7 +79,8 @@ jobs:
         if: |
           matrix.os == 'ubuntu-latest' && (
             contains(matrix.target, 'aarch64') ||
-            contains(matrix.target, 'armv7')
+            contains(matrix.target, 'armv7') ||
+            contains(matrix.target, 'armv6')
           )
         run: |
           sudo apt-get update
@@ -198,6 +207,14 @@ jobs:
 
           if [ -f "./artifacts/envx-linux-armv7-static/envx-linux-armv7-static" ]; then
             cp "./artifacts/envx-linux-armv7-static/envx-linux-armv7-static" ./release-assets/
+          fi
+
+          if [ -f "./artifacts/envx-linux-armv6/envx-linux-armv6" ]; then
+            cp "./artifacts/envx-linux-armv6/envx-linux-armv6" ./release-assets/
+          fi
+
+          if [ -f "./artifacts/envx-linux-armv6-static/envx-linux-armv6-static" ]; then
+            cp "./artifacts/envx-linux-armv6-static/envx-linux-armv6-static" ./release-assets/
           fi
 
 
