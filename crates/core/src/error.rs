@@ -8,9 +8,6 @@ pub enum EnvxError {
     #[error("Permission denied: {0}")]
     PermissionDenied(String),
 
-    #[error("Invalid variable name: {0}")]
-    InvalidVarName(String),
-
     #[error("IO error: {0}")]
     Io(#[from] std::io::Error),
 

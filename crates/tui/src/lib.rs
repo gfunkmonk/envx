@@ -65,7 +65,7 @@ pub fn run() -> Result<()> {
 
                     // Debounce: ignore if key pressed within 100ms
                     if let Some(last_time) = last_key_time {
-                        if now.duration_since(last_time) < Duration::from_millis(50) {
+                        if now.duration_since(last_time) < Duration::from_millis(100) {
                             continue;
                         }
                     }

@@ -55,14 +55,24 @@ impl EnvVarManager {
     /// - File system operations fail when reading Unix shell configurations
     /// - Other platform-specific environment variable access fails
     pub fn load_all(&mut self) -> Result<()> {
-        // Load process environment variables
+        // Load process environment variables, tagging shell-specific ones on Unix
         for (key, value) in std::env::vars() {
+            #[cfg(unix)]
+            let source = if key.starts_with("BASH_") || key.starts_with("ZSH_") {
+                EnvVarSource::Shell
+            } else {
+                EnvVarSource::Process
+            };
+
+            #[cfg(not(unix))]
+            let source = EnvVarSource::Process;
+
             self.vars.insert(
                 key.clone(),
                 EnvVar {
                     name: key,
                     value,
-                    source: EnvVarSource::Process,
+                    source,
                     modified: Utc::now(),
                     original_value: None,
                 },
@@ -71,9 +81,6 @@ impl EnvVarManager {
 
         #[cfg(windows)]
         self.load_windows_vars();
-
-        #[cfg(unix)]
-        self.load_unix_vars();
 
         Ok(())
     }
@@ -116,30 +123,6 @@ impl EnvVarManager {
                     },
                 );
             }
-        }
-    }
-
-    #[cfg(unix)]
-    fn load_unix_vars(&mut self) {
-        // On Unix, we primarily work with process environment
-        // Shell-specific vars can be detected by checking common patterns
-        for (key, value) in std::env::vars() {
-            let source = if key.starts_with("BASH_") || key.starts_with("ZSH_") {
-                EnvVarSource::Shell
-            } else {
-                EnvVarSource::Process
-            };
-
-            self.vars.insert(
-                key.clone(),
-                EnvVar {
-                    name: key,
-                    value,
-                    source,
-                    modified: Utc::now(),
-                    original_value: None,
-                },
-            );
         }
     }
 
@@ -256,6 +239,8 @@ impl EnvVarManager {
         self.vars.insert(name.to_string(), var);
 
         // Apply to process
+        // SAFETY: std::env::set_var is safe when called from a single-threaded context
+        // or before any threads are spawned. envx manages env vars sequentially.
         unsafe { std::env::set_var(name, value) };
 
         if permanent {
@@ -338,6 +323,8 @@ impl EnvVarManager {
         ));
 
         // Remove from current process
+        // SAFETY: std::env::remove_var is safe when called from a single-threaded context
+        // or before any threads are spawned. envx manages env vars sequentially.
         unsafe { std::env::remove_var(name) };
 
         // Remove from system if it was a permanent variable
@@ -403,10 +390,14 @@ impl EnvVarManager {
                             original_value: self.vars.get(&name).map(|v| v.value.clone()),
                         };
                         self.vars.insert(name.clone(), var);
+                        // SAFETY: std::env::set_var is safe when called from a single-threaded context
+                        // or before any threads are spawned. envx manages env vars sequentially.
                         unsafe { std::env::set_var(&name, &old) };
                     } else {
                         // Variable didn't exist before - remove it without adding to history
                         self.vars.swap_remove(&name);
+                        // SAFETY: std::env::remove_var is safe when called from a single-threaded context
+                        // or before any threads are spawned. envx manages env vars sequentially.
                         unsafe { std::env::remove_var(&name) };
                     }
                 }
@@ -420,6 +411,8 @@ impl EnvVarManager {
                         original_value: None,
                     };
                     self.vars.insert(name.clone(), var);
+                    // SAFETY: std::env::set_var is safe when called from a single-threaded context
+                    // or before any threads are spawned. envx manages env vars sequentially.
                     unsafe { std::env::set_var(&name, &old_value) };
                 }
                 crate::history::HistoryAction::BatchUpdate { .. } => {}
@@ -1104,7 +1097,7 @@ mod tests {
         // Set a mock shell variable
         unsafe { std::env::set_var("BASH_VERSION", "5.0.0") };
 
-        manager.load_unix_vars();
+        manager.load_all().unwrap();
 
         if let Some(var) = manager.get("BASH_VERSION") {
             assert_eq!(var.source, EnvVarSource::Shell);

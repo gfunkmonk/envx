@@ -68,19 +68,7 @@ impl PathManager {
     pub fn remove_all(&mut self, pattern: &str) -> usize {
         let normalized = Self::normalize_path(pattern);
         let original_len = self.entries.len();
-
-        // Pre-normalize all entries to avoid borrowing self in the closure
-        let normalized_entries: Vec<String> = self.entries.iter().map(|e| Self::normalize_path(e)).collect();
-
-        // Keep only entries that don't match the normalized pattern
-        let mut new_entries = Vec::new();
-        for (i, entry) in self.entries.iter().enumerate() {
-            if normalized_entries[i] != normalized {
-                new_entries.push(entry.clone());
-            }
-        }
-        self.entries = new_entries;
-
+        self.entries.retain(|e| Self::normalize_path(e) != normalized);
         original_len - self.entries.len()
     }
 
