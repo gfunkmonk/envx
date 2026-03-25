@@ -123,6 +123,7 @@ jobs:
           echo "CC_armv7_unknown_linux_musleabihf=arm-linux-gnueabihf-gcc" >> $GITHUB_ENV
 
           echo "AR_armv7_unknown_linux_musleabihf=arm-linux-gnueabihf-ar" >> $GITHUB_ENV
+          echo "JEMALLOC_SYS_WITH_LG_VADDR=32" >> $GITHUB_ENV
       - name: Configure cross-compilation environment for ARM
         if: matrix.target == 'arm-unknown-linux-gnueabihf'
         run: >
@@ -131,6 +132,7 @@ jobs:
           >> $GITHUB_ENV
           echo "CC_arm_unknown_linux_gnueabihf=arm-linux-gnueabihf-gcc" >> $GITHUB_ENV
           echo "AR_arm_unknown_linux_gnueabihf=arm-linux-gnueabihf-ar" >> $GITHUB_ENV
+          echo "JEMALLOC_SYS_WITH_LG_VADDR=32" >> $GITHUB_ENV
       - name: Configure cross-compilation environment for ARM MUSL
         if: matrix.target == 'arm-unknown-linux-musleabihf'
         run: >
@@ -139,6 +141,7 @@ jobs:
           >> $GITHUB_ENV
           echo "CC_arm_unknown_linux_musleabihf=arm-linux-gnueabihf-gcc" >> $GITHUB_ENV
           echo "AR_arm_unknown_linux_musleabihf=arm-linux-gnueabihf-ar" >> $GITHUB_ENV
+          echo "JEMALLOC_SYS_WITH_LG_VADDR=32" >> $GITHUB_ENV
       - name: Build
         run: cargo build --target ${{ matrix.target }} --release
       - name: Rename binary
