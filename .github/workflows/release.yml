@@ -203,8 +203,8 @@ jobs:
             cp "./artifacts/envx-linux-arm64/envx-linux-arm64" ./release-assets/
           fi
 
-          if [ -f "./artifacts/envx-linux-arm64/envx-linux-arm64-static" ]; then
-            cp "./artifacts/envx-linux-arm64/envx-linux-arm64-static" ./release-assets/
+          if [ -f "./artifacts/envx-linux-arm64-static/envx-linux-arm64-static" ]; then
+            cp "./artifacts/envx-linux-arm64-static/envx-linux-arm64-static" ./release-assets/
           fi
 
           if [ -f "./artifacts/envx-linux-armv7/envx-linux-armv7" ]; then
