@@ -27,7 +27,7 @@ jobs:
             artifact_name: envx
             asset_name: envx-macos-amd64
           - os: macos-15
-            target: arm64-apple-darwin
+            target: aarch64-apple-darwin
             artifact_name: envx
             asset_name: envx-macos-arm64
           - os: ubuntu-latest
