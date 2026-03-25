@@ -97,38 +97,46 @@ impl Analyzer {
 
     #[must_use]
     pub fn analyze_dependencies(&self) -> HashMap<String, Vec<String>> {
+        // Pre-compute all three pattern forms for each variable name to avoid
+        // reallocating strings in the inner loop.
+        let patterns: Vec<(&str, String, String, String)> = self
+            .vars
+            .iter()
+            .filter(|v| !v.name.is_empty())
+            .map(|v| {
+                (
+                    v.name.as_str(),
+                    format!("%{}%", v.name),      // Windows style: %VAR%
+                    format!("${{{}}}", v.name),   // Unix brace style: ${VAR}
+                    format!("${}", v.name),       // Unix bare style: $VAR
+                )
+            })
+            .collect();
+
         let mut deps = HashMap::new();
 
         for var in &self.vars {
             let mut var_deps = Vec::new();
 
-            // Check if this variable references other variables
-            for other in &self.vars {
-                if var.name != other.name && !other.name.is_empty() {
-                    // Windows style: %VAR_NAME%
-                    let pattern_windows = format!("%{}%", other.name);
-                    // Unix style with braces: ${VAR_NAME}
-                    let pattern_unix_braces = format!("${{{}}}", other.name);
+            for (other_name, pattern_windows, pattern_unix_braces, unix_pattern) in &patterns {
+                if *other_name == var.name {
+                    continue;
+                }
 
-                    if var.value.contains(&pattern_windows) || var.value.contains(&pattern_unix_braces) {
-                        var_deps.push(other.name.clone());
-                    } else {
-                        // For $VAR_NAME pattern, we need to be more careful
-                        // to avoid matching just $ at the end of string
-                        let unix_pattern = format!("${}", other.name);
-                        // Check if followed by a non-alphanumeric character or end of string
-                        if let Some(pos) = var.value.find(&unix_pattern) {
-                            let next_pos = pos + unix_pattern.len();
-                            if next_pos == var.value.len()
-                                || !var
-                                    .value
-                                    .chars()
-                                    .nth(next_pos)
-                                    .is_some_and(|c| c.is_alphanumeric() || c == '_')
-                            {
-                                var_deps.push(other.name.clone());
-                            }
-                        }
+                if var.value.contains(pattern_windows) || var.value.contains(pattern_unix_braces) {
+                    var_deps.push((*other_name).to_string());
+                } else if let Some(pos) = var.value.find(unix_pattern.as_str()) {
+                    // For $VAR_NAME, ensure it isn't a prefix of a longer name
+                    // (e.g. $HOME should not match inside $HOMEPATH).
+                    // Use get() with a char-boundary-safe byte offset to avoid panics.
+                    let next_pos = pos + unix_pattern.len();
+                    if !var
+                        .value
+                        .get(next_pos..)
+                        .and_then(|s| s.chars().next())
+                        .is_some_and(|c| c.is_alphanumeric() || c == '_')
+                    {
+                        var_deps.push((*other_name).to_string());
                     }
                 }
             }
