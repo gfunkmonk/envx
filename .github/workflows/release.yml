@@ -24,6 +24,10 @@ jobs:
             target: x86_64-pc-windows-msvc
             artifact_name: envx.exe
             asset_name: envx-windows-amd64.exe
+          - os: windows-latest
+            target: i686-pc-windows-msvc
+            artifact_name: envx.exe
+            asset_name: envx-windows-i686.exe
           - os: macos-15-intel
             target: x86_64-apple-darwin
             artifact_name: envx
@@ -175,6 +179,10 @@ jobs:
 
           if [ -f "./artifacts/envx-windows-amd64.exe/envx-windows-amd64.exe" ]; then
             cp "./artifacts/envx-windows-amd64.exe/envx-windows-amd64.exe" ./release-assets/
+          fi
+
+          if [ -f "./artifacts/envx-windows-i686.exe/envx-windows-i686.exe" ]; then
+            cp "./artifacts/envx-windows-i686.exe/envx-windows-i686.exe" ./release-assets/
           fi
 
           if [ -f "./artifacts/envx-macos-amd64/envx-macos-amd64" ]; then
