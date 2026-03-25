@@ -51,13 +51,13 @@ jobs:
             artifact_name: envx
             asset_name: envx-linux-armv7-static
           - os: ubuntu-latest
-            target: armv6-unknown-linux-gnueabihf
+            target: arm-unknown-linux-gnueabihf
             artifact_name: envx
-            asset_name: envx-linux-armv6
+            asset_name: envx-linux-arm
           - os: ubuntu-latest
-            target: armv6-unknown-linux-musleabihf
+            target: arm-unknown-linux-musleabihf
             artifact_name: envx
-            asset_name: envx-linux-armv6-static
+            asset_name: envx-linux-arm-static
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -80,7 +80,7 @@ jobs:
           matrix.os == 'ubuntu-latest' && (
             contains(matrix.target, 'aarch64') ||
             contains(matrix.target, 'armv7') ||
-            contains(matrix.target, 'armv6')
+            contains(matrix.target, 'arm')
           )
         run: |
           sudo apt-get update
@@ -209,12 +209,12 @@ jobs:
             cp "./artifacts/envx-linux-armv7-static/envx-linux-armv7-static" ./release-assets/
           fi
 
-          if [ -f "./artifacts/envx-linux-armv6/envx-linux-armv6" ]; then
-            cp "./artifacts/envx-linux-armv6/envx-linux-armv6" ./release-assets/
+          if [ -f "./artifacts/envx-linux-arm/envx-linux-arm" ]; then
+            cp "./artifacts/envx-linux-arm/envx-linux-arm" ./release-assets/
           fi
 
-          if [ -f "./artifacts/envx-linux-armv6-static/envx-linux-armv6-static" ]; then
-            cp "./artifacts/envx-linux-armv6-static/envx-linux-armv6-static" ./release-assets/
+          if [ -f "./artifacts/envx-linux-arm-static/envx-linux-arm-static" ]; then
+            cp "./artifacts/envx-linux-arm-static/envx-linux-arm-static" ./release-assets/
           fi
 
 
