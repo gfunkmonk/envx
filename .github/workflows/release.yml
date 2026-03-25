@@ -11,6 +11,7 @@ jobs:
   build-and-release:
     name: Build and Release
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
