@@ -23,10 +23,10 @@ tracing-subscriber = { workspace = true }
 ratatui = { workspace = true }
 crossterm = { workspace = true }
 
-[target.'cfg(windows)'.dependencies]
+[target.'cfg(any(windows, target_env = "musl"))'.dependencies]
 mimalloc = "0.1.47"
 
-[target.'cfg(not(windows))'.dependencies]
+[target.'cfg(all(not(windows), not(target_env = "musl")))'.dependencies]
 jemallocator = "0.5.4"
 
 [[bin]]
