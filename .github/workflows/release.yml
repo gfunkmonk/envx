@@ -22,10 +22,14 @@ jobs:
             target: x86_64-pc-windows-msvc
             artifact_name: envx.exe
             asset_name: envx-windows-amd64.exe
-          - os: macos-latest
+          - os: macos-15-intel
             target: x86_64-apple-darwin
             artifact_name: envx
             asset_name: envx-macos-amd64
+          - os: macos-15
+            target: arm64-apple-darwin
+            artifact_name: envx
+            asset_name: envx-macos-arm64
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
             artifact_name: envx
@@ -164,6 +168,10 @@ jobs:
 
           if [ -f "./artifacts/envx-macos-amd64/envx-macos-amd64" ]; then
             cp "./artifacts/envx-macos-amd64/envx-macos-amd64" ./release-assets/
+          fi
+
+          if [ -f "./artifacts/envx-macos-amd64/envx-macos-arm64" ]; then
+            cp "./artifacts/envx-macos-amd64/envx-macos-arm64" ./release-assets/
           fi
 
 
