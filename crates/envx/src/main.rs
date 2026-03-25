@@ -4,7 +4,7 @@ use color_eyre::Result;
 use envx_cli::Cli;
 use std::process;
 
-#[cfg(not(windows))]
+#[cfg(all(not(windows), not(all(target_arch = "arm", target_env = "musl"))))]
 use jemallocator::Jemalloc;
 #[cfg(windows)]
 use mimalloc::MiMalloc;
@@ -13,7 +13,7 @@ use mimalloc::MiMalloc;
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
-#[cfg(not(windows))]
+#[cfg(all(not(windows), not(all(target_arch = "arm", target_env = "musl"))))]
 #[global_allocator]
 static GLOBAL: Jemalloc = Jemalloc;
 
