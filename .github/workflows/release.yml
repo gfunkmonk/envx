@@ -34,6 +34,10 @@ jobs:
             artifact_name: envx
             asset_name: envx-linux-arm64
           - os: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            artifact_name: envx
+            asset_name: envx-linux-arm64-static
+          - os: ubuntu-latest
             target: armv7-unknown-linux-gnueabihf
             artifact_name: envx
             asset_name: envx-linux-armv7
@@ -175,6 +179,9 @@ jobs:
             cp "./artifacts/envx-linux-arm64/envx-linux-arm64" ./release-assets/
           fi
 
+          if [ -f "./artifacts/envx-linux-arm64/envx-linux-arm64-static" ]; then
+            cp "./artifacts/envx-linux-arm64/envx-linux-arm64-static" ./release-assets/
+          fi
 
           if [ -f "./artifacts/envx-linux-armv7/envx-linux-armv7" ]; then
             cp "./artifacts/envx-linux-armv7/envx-linux-armv7" ./release-assets/
