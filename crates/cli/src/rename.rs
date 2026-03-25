@@ -1,4 +1,4 @@
-use clap::{Args, arg};
+use clap::Args;
 use color_eyre::Result;
 use comfy_table::{Table, presets::UTF8_FULL};
 use envx_core::{EnvVarManager, env::split_wildcard_pattern};
