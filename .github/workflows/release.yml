@@ -123,6 +123,22 @@ jobs:
           echo "CC_armv7_unknown_linux_musleabihf=arm-linux-gnueabihf-gcc" >> $GITHUB_ENV
 
           echo "AR_armv7_unknown_linux_musleabihf=arm-linux-gnueabihf-ar" >> $GITHUB_ENV
+      - name: Configure cross-compilation environment for ARM
+        if: matrix.target == 'arm-unknown-linux-gnueabihf'
+        run: >
+          echo
+          "CARGO_TARGET_ARM_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-linux-gnueabihf-gcc"
+          >> $GITHUB_ENV
+          echo "CC_arm_unknown_linux_gnueabihf=arm-linux-gnueabihf-gcc" >> $GITHUB_ENV
+          echo "AR_arm_unknown_linux_gnueabihf=arm-linux-gnueabihf-ar" >> $GITHUB_ENV
+      - name: Configure cross-compilation environment for ARM MUSL
+        if: matrix.target == 'arm-unknown-linux-musleabihf'
+        run: >
+          echo
+          "CARGO_TARGET_ARM_UNKNOWN_LINUX_MUSLEABIHF_LINKER=arm-linux-gnueabihf-gcc"
+          >> $GITHUB_ENV
+          echo "CC_arm_unknown_linux_musleabihf=arm-linux-gnueabihf-gcc" >> $GITHUB_ENV
+          echo "AR_arm_unknown_linux_musleabihf=arm-linux-gnueabihf-ar" >> $GITHUB_ENV
       - name: Build
         run: cargo build --target ${{ matrix.target }} --release
       - name: Rename binary
