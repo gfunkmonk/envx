@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use clap::command;
 use clap::{Args, Subcommand};
 use color_eyre::Result;
 use comfy_table::Table;

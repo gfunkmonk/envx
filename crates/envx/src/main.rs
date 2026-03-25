@@ -4,16 +4,16 @@ use color_eyre::Result;
 use envx_cli::Cli;
 use std::process;
 
-#[cfg(any(windows, target_env = "musl"))]
-use mimalloc::MiMalloc;
-#[cfg(all(not(windows), not(target_env = "musl")))]
+#[cfg(not(windows))]
 use jemallocator::Jemalloc;
+#[cfg(windows)]
+use mimalloc::MiMalloc;
 
-#[cfg(any(windows, target_env = "musl"))]
+#[cfg(windows)]
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
-#[cfg(all(not(windows), not(target_env = "musl")))]
+#[cfg(not(windows))]
 #[global_allocator]
 static GLOBAL: Jemalloc = Jemalloc;
 
