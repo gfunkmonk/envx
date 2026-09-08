@@ -27,7 +27,7 @@ crossterm = { workspace = true }
 mimalloc = "0.1.48"
 
 [target.'cfg(all(not(windows), not(all(target_arch = "arm", target_env = "musl"))))'.dependencies]
-jemallocator = "0.5.4"
+jemallocator = "0.7.0"
 
 [[bin]]
 name = "envx"
